@@ -16,6 +16,18 @@
 #include "parameters_json.h"
 #include <sensor_msgs/Imu.h>
 
+std::string return16decimalpoints(double value) {
+    char c_value[256];
+    sprintf(c_value, "%.16f", value);
+    return std::string(c_value);
+}
+
+std::string return2decimalpoints(double value) {
+    char c_value[256];
+    sprintf(c_value, "%.2f", value);
+    return std::string(c_value);
+}
+
 int main(int argc, char ** argv) {
     std::cout<<"IMU to TXT"<<std::endl;
     Params params;
@@ -29,7 +41,7 @@ int main(int argc, char ** argv) {
 
 
     std::string bag_path = params.IOParam.input_bag;
-    std::string gps_topic = "/gx5/filtered/imu/data";
+    std::string gps_topic = "/gx5/imu/data";
     std::string output_dir = params.IOParam.output_dir;
 
     boost::filesystem::path outpath(output_dir);
@@ -56,7 +68,7 @@ int main(int argc, char ** argv) {
         return -1;
     }
 
-    std::string output_file = output_dir + "/imu.txt";
+    std::string output_file = output_dir + "/imu_raw.txt";
     std::ofstream write_file(output_file.c_str());
 
     view.addQuery(rb, rosbag::TopicQuery(gps_topic));
@@ -84,6 +96,27 @@ int main(int argc, char ** argv) {
         std::string s_time = std::string(c_time);
 
         write_file << s_time;
+
+        write_file << "\t" << return16decimalpoints(imu_msg.orientation.x);
+        write_file << "\t" << return16decimalpoints(imu_msg.orientation.y);
+        write_file << "\t" << return16decimalpoints(imu_msg.orientation.z);
+        write_file << "\t" << return16decimalpoints(imu_msg.orientation.w);
+        for(size_t i = 0; i < 9; ++i) {
+            write_file << "\t" << return16decimalpoints(imu_msg.orientation_covariance[i]);
+        }
+        write_file << "\t" << return16decimalpoints(imu_msg.angular_velocity.x);
+        write_file << "\t" << return16decimalpoints(imu_msg.angular_velocity.y);
+        write_file << "\t" << return16decimalpoints(imu_msg.angular_velocity.z);
+        for(size_t i = 0; i < 9; ++i) {
+            write_file << "\t" << return2decimalpoints(imu_msg.angular_velocity_covariance[i]);
+        }
+        write_file << "\t" << return16decimalpoints(imu_msg.linear_acceleration.x);
+        write_file << "\t" << return16decimalpoints(imu_msg.linear_acceleration.y);
+        write_file << "\t" << return16decimalpoints(imu_msg.linear_acceleration.z);
+        for(size_t i = 0; i < 9; ++i) {
+            write_file << "\t" << return2decimalpoints(imu_msg.linear_acceleration_covariance[i]);
+        }
+        write_file << "\n";
 
         ++view_it;
     }
