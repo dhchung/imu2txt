@@ -1,0 +1,14 @@
+// parameters.json example
+// modify and copy it to parameters/
+{
+    "io_params": [
+        {
+            "name" : "input_bag",
+            "value" : "/data/data_bag.bag"
+        },
+        {
+            "name" : "output_dir",
+            "value" : "/data/data_name/gps"
+        }
+    ]
+}
