@@ -8,7 +8,7 @@
         },
         {
             "name" : "output_dir",
-            "value" : "/data/data_name/gps"
+            "value" : "/data/data_name/imu"
         }
     ]
 }
