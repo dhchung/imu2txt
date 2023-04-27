@@ -12,7 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
     rosbag
     geometry_msgs
     sensor_msgs
-    core_msgs
+    # core_msgs
     std_msgs
 )
 
@@ -25,7 +25,7 @@ catkin_package(
         geometry_msgs 
         sensor_msgs 
         std_msgs 
-        core_msgs
+        # core_msgs
 )
 
 file(GLOB SOURCES
